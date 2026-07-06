@@ -36,5 +36,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# generated native folders
-/ios
+# 注意：android/ 目录已被提交到 Git，不再忽略
