@@ -6,10 +6,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取代码
+      - name: 拉取仓库代码
         uses: actions/checkout@v4
 
-      - name: 配置Node
+      - name: 配置Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -18,14 +18,13 @@ jobs:
       - name: 安装项目依赖
         run: npm install
 
-      # 新增：全局安装eas打包工具
       - name: 全局安装 eas-cli
         run: npm install -g eas-cli
 
-      - name: Expo登录
+      - name: Expo 授权登录
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas login --non-interactive
 
-      - name: Android打包
+      - name: 编译安卓APK
         run: eas build --platform android --profile preview --non-interactive
