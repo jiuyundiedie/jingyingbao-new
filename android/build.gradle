@@ -12,18 +12,16 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        // 添加 expo-modules-core 本地仓库，以便找到 expo-module-gradle-plugin
         maven {
-            url = uri(new File(['node', '--print', "require.resolve('expo-modules-core/package.json')"].execute(null, rootDir).text.trim(), '../android'))
+            url = uri("${rootDir}/../node_modules/expo-modules-core/android")
         }
-        // 也可以直接使用 flatDir 或 maven 指向 node_modules 中的本地 jar
     }
     dependencies {
         classpath('com.android.tools.build:gradle')
         classpath('com.facebook.react:react-native-gradle-plugin')
         classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
-        // 添加 expo 模块插件
-        classpath('expo-module-gradle-plugin')
+        // 正确格式：组:名称
+        classpath "expo.modules:expo-module-gradle-plugin"
     }
 }
 
@@ -32,18 +30,19 @@ apply plugin: "com.facebook.react.rootproject"
 allprojects {
     repositories {
         maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url(new File(['node', '--print', "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
+            url = uri("${rootDir}/../node_modules/react-native/android")
         }
         maven {
-            // Android JSC is installed from npm
-            url(new File(['node', '--print', "require.resolve('jsc-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), '../dist'))
+            url = uri("${rootDir}/../node_modules/jsc-android/dist")
         }
-
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
-        // 确保所有子项目都能找到 expo 插件
+        maven {
+            url = uri("${rootDir}/../node_modules/expo-modules-core/android")
+        }
+    }
+}
         maven {
             url = uri(new File(['node', '--print', "require.resolve('expo-modules-core/package.json')"].execute(null, rootDir).text.trim(), '../android'))
         }
