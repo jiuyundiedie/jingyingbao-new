@@ -1,0 +1,27 @@
+name: Build Expo Android APK
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+
+      - name: 配置Node.js环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 安装项目依赖
+        run: npm install
+
+      - name: 登录Expo账号
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx eas login --non-interactive
+
+      - name: 执行Android打包
+        run: npx eas build --platform android --profile preview --non-interactive
